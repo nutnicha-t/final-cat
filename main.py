@@ -7,9 +7,10 @@ from gamelib import Sprite, GameApp, Text
 
 from consts import *
 
+
 class SlowFruit(Sprite):
-    def __init__(self, app, x, y):
-        super().__init__(app, 'images/apple.png', x, y)
+    def __init__(self, app, x, y, fruit_image='images/apple.png'):
+        super().__init__(app, fruit_image, x, y)
 
         self.app = app
 
@@ -18,11 +19,12 @@ class SlowFruit(Sprite):
 
         if self.x < -30:
             self.to_be_deleted = True
+        
 
 
 class FastFruit(Sprite):
-    def __init__(self, app, x, y):
-        super().__init__(app, 'images/banana.png', x, y)
+    def __init__(self, app, x, y, fruit_image='images/banana.png'):
+        super().__init__(app, fruit_image, x, y)
 
         self.app = app
 
@@ -31,11 +33,11 @@ class FastFruit(Sprite):
 
         if self.x < -30:
             self.to_be_deleted = True
-
+        
 
 class SlideFruit(Sprite):
-    def __init__(self, app, x, y):
-        super().__init__(app, 'images/cherry.png', x, y)
+    def __init__(self, app, x, y, fruit_image='images/cherry.png'):
+        super().__init__(app, fruit_image, x, y)
 
         self.app = app
         self.direction = randint(0,1)*2 - 1
@@ -46,11 +48,12 @@ class SlideFruit(Sprite):
 
         if self.x < -30:
             self.to_be_deleted = True
+        
 
 
 class CurvyFruit(Sprite):
-    def __init__(self, app, x, y):
-        super().__init__(app, 'images/pear.png', x, y)
+    def __init__(self, app, x, y, fruit_image='images/pear.png'):
+        super().__init__(app, fruit_image, x, y)
 
         self.app = app
         self.t = randint(0,360) * 2 * math.pi / 360
@@ -62,6 +65,7 @@ class CurvyFruit(Sprite):
 
         if self.x < -30:
             self.to_be_deleted = True
+        
 
 
 class Cat(Sprite):
@@ -79,11 +83,35 @@ class Cat(Sprite):
             if self.y <= CANVAS_HEIGHT - CAT_MARGIN:
                 self.y += CAT_SPEED
 
+
     def check_collision(self, fruit):
         if self.distance_to(fruit) <= CAT_CATCH_DISTANCE:
             fruit.to_be_deleted = True
-            self.app.score += 1
             self.app.update_score()
+        if SlowFruit:
+            self.app.score += 1
+        elif FastFruit:
+            self.app.score += 2
+        elif SlideFruit:
+            self.app.score += 5
+        elif CurvyFruit:
+            self.app.score += 3
+
+
+            
+
+class FallOut(Sprite):
+    def start(self):
+        self.is_within_distance = True
+    
+    def out_of_screen(self):
+        if self.y <= CANVAS_HEIGHT+40 and self.y >= -20:
+            return False
+        return True
+    
+    # def update(self):
+    #     if self.is_within_distance:
+
 
 
 class CatGame(GameApp):
